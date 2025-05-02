@@ -7,12 +7,12 @@ const api = axios.create({
 export default api;
 
 export const pets_api = {
-    getAllPets: '/pets', //
-    addNewPet: '/pets', //
-    deletePet: '/pets/:id',
-    getPetData: '/pets', 
-    updatePetData: "/pets", //
-    adoptPet: "/pets", //patch
-    deletePet: "/pets/:id", //delete
-    filterPetsByMood: "/pets/filter", //get
+    pets: '/pets', //
+    // addNewPet: '/pets', //
+    // deletePet: '/pets/:id',
+    // getPetData: '/pets', 
+    // updatePetData: "/pets", //
+    // adoptPet: "/pets", //patch
+    // deletePet: "/pets/:id", //delete
+    // filterPetsByMood: "/pets/filter", //get
 };

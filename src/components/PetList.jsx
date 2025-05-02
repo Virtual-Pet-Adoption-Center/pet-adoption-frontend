@@ -23,17 +23,17 @@ const PetList = () => {
 
     const getAllPetsData = async () => {
         try {
-            const response = await api.get(pets_api.getAllPets);
+            const response = await api.get(pets_api.pets);
             setPets(response?.data);
             console.log("pets data::", response?.data)
         } catch (err) {
-            console.err("Error fetching on Get All Pets::", err)
+            console.error("Error fetching on Get All Pets::", err)
         }
     }
 
     const getPetData = async (id) => {
         try {
-            const res = await api.get(`${pets_api.getPetData}/${id}`);
+            const res = await api.get(`${pets_api.pets}/${id}`);
             setEditPet(res?.data);
             console.log("pets data::", res?.data)
         } catch (err) {

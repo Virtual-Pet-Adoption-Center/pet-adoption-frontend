@@ -49,7 +49,7 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
 
     const handleAdaptConfirm = async (id) => {
         try {
-            const res = await api.patch(`${pets_api?.adoptPet}/${id}/adopt`);
+            const res = await api.patch(`${pets_api?.pets}/${id}/adopt`);
             console.log("res::", res);
             onPetSubmitSuccess?.();
         }catch(err){
