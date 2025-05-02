@@ -1,11 +1,14 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import PetCard from '../components/PetCard.jsx';
-import PetData from '../utils/PetData.jsx';
+// import PetData from '../utils/PetData.jsx';
 import '../styles/Home.css';
 import { useState } from 'react';
 import { Modal } from '@mui/material';
 import AddPetForm from './AddPetForm.jsx';
+import api, { pets_api } from '../services/api';
+import { useEffect } from 'react';
+
 
 const PetList = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,19 +18,37 @@ const PetList = () => {
         setEditPet(pet);
         setIsModalOpen(true);
     };
+
+    const [pets, setPets] = useState([]);
+
+    const getAllPetsData = async () => {
+        try {
+            const response = await api.get(pets_api.getAllPets);
+            setPets(response?.data);
+            // console.log("pets data::", response?.data )
+        }catch(err){
+            console.err("Error fetching on Get All Pets::", err)
+        }
+    }
+
+   useEffect(() => {
+       getAllPetsData()
+   }, [pets]);
+
     return (
         <div>
             <div className="pet-card-container">
-                {PetData.map((pet, index) => (
+                {pets.map((pet, index) => (
                     <PetCard
                         key={index}
+                        id={pet?.id}
                         name={pet?.name}
                         age={pet?.age}
                         species={pet?.species}
                         mood={pet?.mood}
                         personality={pet?.personality}
-                        adapted={pet?.adapted}
-                        adapted_date={pet?.adapted_date}
+                        adapted={pet?.adopted}
+                        adapted_date={pet?.adopted_date}
                         onEdit={() => handleEditClick(pet)}
                     />
                 ))}
@@ -54,6 +75,7 @@ const PetList = () => {
                             handleCloseModal={() => setIsModalOpen(false)}
                             mode="edit"
                             petData={editPet}
+                            onPetSubmitSuccess={getAllPetsData}
                         />
                     </Box>
                 </Modal>

@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const PetCard = ({ name, species, age, personality, mood, adapted, adapted_date, onEdit }) => {
+const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit }) => {
     const moodColors = {
         Happy: { button: 'green', border: '#4caf50' },
         Excited: { button: 'orange', border: '#ff9800' },
@@ -17,6 +17,7 @@ const PetCard = ({ name, species, age, personality, mood, adapted, adapted_date,
     };
 
     const moodColor = moodColors[mood] || { button: 'grey', border: '#e91e63' };
+
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openAdapt, setOpenAdapt] = React.useState(false);
 
@@ -64,10 +65,10 @@ const PetCard = ({ name, species, age, personality, mood, adapted, adapted_date,
                             {personality}
                         </Typography>
                     </div>
-                    <Button size='small' disabled={adapted === 1}
+                    <Button size='small' disabled={adapted === true}
                         onClick={() => setOpenAdapt(true)}
-                        sx={{ backgroundColor: adapted === 0 ? '#616161' : '#bdbdbd', color: 'white', width: '100%', borderRadius: 2 }}>
-                        {adapted === 0 ? "Adopt Me" : `Adapted   ${adapted_date}`}
+                        sx={{ backgroundColor: adapted === false ? '#616161' : '#bdbdbd', color: 'white', width: '100%', borderRadius: 2 }}>
+                        {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date}`}
                     </Button>
                 </CardContent>
                 <Button size='small' sx={{ backgroundColor: moodColor?.button, color: 'white', width: '100%', borderRadius: 0 }}>

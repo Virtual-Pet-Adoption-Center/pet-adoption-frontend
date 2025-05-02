@@ -7,13 +7,15 @@ import {
     Select,
     MenuItem,
     InputLabel,
-    FormControl
+    FormControl, Alert
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import api, { pets_api } from '../services/api';
 
-const AddPetForm = ({ handleCloseModal, mode = "create", petData = {} }) => {
+const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubmitSuccess }) => {
     const navigate = useNavigate();
+    // console.log("petData::", petData)
 
     const [formValues, setFormValues] = useState({
         name: petData.name || '',
@@ -29,11 +31,31 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {} }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(`${mode === 'edit' ? 'Edited' : 'Created'}:`, formValues);
-        navigate('/');
-        handleCloseModal();
+        try {
+            if (mode === 'create') {
+                try {
+                    const res = await api.post(pets_api?.addNewPet, formValues);
+                    if (res?.status === 201) {
+                        console.log('Pet added successfully::', res);
+                        console.log('form Values::', formValues);
+                        onPetSubmitSuccess?.();
+                        <Alert severity="success">Pet added successfully</Alert>
+                    } else {
+                        console.log("Error:: Cannot Create::")
+                    }
+                } catch (err) {
+                    console.error("Error getting on Add New Pet::", err);
+                }
+            } else {
+                console.log('Pet edited:', formValues);
+            }
+            // navigate('/');
+            handleCloseModal();
+        } catch (error) {
+            console.error('Error submitting pet data:', error);
+        }
     };
 
     return (
@@ -49,7 +71,7 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {} }) => {
                         zIndex: 1
                     }}
                 >
-                    <CloseIcon sx={{ color: 'white', backgroundColor:"#616161" }} />
+                    <CloseIcon sx={{ color: 'white', backgroundColor: "#616161" }} />
                 </Box>
             </Box>
             <Grid container spacing={2}>
@@ -92,7 +114,7 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {} }) => {
                     value={formValues.personality}
                     onChange={handleChange}
                     fullWidth
-                    disabled={mode === 'edit' ? false : false}
+                    required
                 />
                 <div className='button-group'>
                     <Button
