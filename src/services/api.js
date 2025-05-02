@@ -12,7 +12,7 @@ export const pets_api = {
     deletePet: '/pets/:id',
     getPetData: '/pets', 
     updatePetData: "/pets", //
-    adoptPet: "/pets/:id/adopt", //put
+    adoptPet: "/pets", //patch
     deletePet: "/pets/:id", //delete
     filterPetsByMood: "/pets/filter", //get
 };

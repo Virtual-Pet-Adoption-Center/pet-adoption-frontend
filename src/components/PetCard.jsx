@@ -8,6 +8,8 @@ import {
     DialogContent, DialogActions, Box, DialogTitle
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import api, { pets_api } from '../services/api';
+import { format } from 'date-fns';
 
 export const CloseIconHandling = ({ onClose }) => {
     return (
@@ -28,7 +30,7 @@ export const CloseIconHandling = ({ onClose }) => {
     )
 }
 
-const PetCard = ({ _id, name, species, age, personality, mood, adapted, adapted_date, onEdit }) => {
+const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit, onPetSubmitSuccess }) => {
     const moodColors = {
         Happy: { button: 'green', border: '#4caf50' },
         Excited: { button: 'orange', border: '#ff9800' },
@@ -45,7 +47,14 @@ const PetCard = ({ _id, name, species, age, personality, mood, adapted, adapted_
         setOpenDeleteDialog(false);
     };
 
-    const handleAdaptConfirm = () => {
+    const handleAdaptConfirm = async (id) => {
+        try {
+            const res = await api.patch(`${pets_api?.adoptPet}/${id}/adopt`);
+            console.log("res::", res);
+            onPetSubmitSuccess?.();
+        }catch(err){
+            console.error("Error getting on Adopting::", err);
+        }
         setOpenAdaptDialog(false);
     };
 
@@ -111,7 +120,7 @@ const PetCard = ({ _id, name, species, age, personality, mood, adapted, adapted_
                             borderRadius: 2
                         }}
                     >
-                        {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date}`}
+                        {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date ? format(new Date(adapted_date), 'yyyy-MM-dd'): ''}`}
                     </Button>
                 </CardContent>
                 <Button size='small' sx={{ backgroundColor: moodColor?.button, color: 'white', width: '100%', borderRadius: 0 }}>
@@ -154,7 +163,7 @@ const PetCard = ({ _id, name, species, age, personality, mood, adapted, adapted_
                     Are you sure you want to ADOPT <strong>{name}</strong>?
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleAdaptConfirm} color="success" variant="contained">
+                    <Button onClick={() => handleAdaptConfirm(id)} color="success" variant="contained">
                         Adopt
                     </Button>
                 </DialogActions>

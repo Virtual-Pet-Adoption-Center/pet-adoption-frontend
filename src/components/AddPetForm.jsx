@@ -85,7 +85,6 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
                     onChange={handleChange}
                     fullWidth
                     required
-                    disabled={mode === 'edit' ? false : false} // allow editing in both modes
                 />
                 <FormControl fullWidth required>
                     <InputLabel id="species-label">Species</InputLabel>

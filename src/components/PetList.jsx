@@ -1,7 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import PetCard from '../components/PetCard.jsx';
-// import PetData from '../utils/PetData.jsx';
 import '../styles/Home.css';
 import { useState } from 'react';
 import { Modal } from '@mui/material';
@@ -26,6 +25,7 @@ const PetList = () => {
         try {
             const response = await api.get(pets_api.getAllPets);
             setPets(response?.data);
+            console.log("pets data::", response?.data)
         } catch (err) {
             console.err("Error fetching on Get All Pets::", err)
         }
@@ -35,6 +35,7 @@ const PetList = () => {
         try {
             const res = await api.get(`${pets_api.getPetData}/${id}`);
             setEditPet(res?.data);
+            console.log("pets data::", res?.data)
         } catch (err) {
             console.error("Error fetching on Pet::", err);
         }
@@ -44,22 +45,22 @@ const PetList = () => {
         getAllPetsData()
     }, []);
 
-
     return (
         <div>
             <div className="pet-card-container">
                 {pets.map((pet, index) => (
                     <PetCard
-                        key={index}
-                        id={pet?.id}
+                        key={pet?._id}
+                        id={pet?._id}
                         name={pet?.name}
                         age={pet?.age}
                         species={pet?.species}
                         mood={pet?.mood}
                         personality={pet?.personality}
                         adapted={pet?.adopted}
-                        adapted_date={pet?.adopted_date}
+                        adapted_date={pet?.adoption_date}
                         onEdit={() => handleEditClick(pet)}
+                        onPetSubmitSuccess={getAllPetsData}
                     />
                 ))}
             </div>
