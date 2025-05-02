@@ -43,14 +43,19 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
     const [openAdaptDialog, setOpenAdaptDialog] = React.useState(false);
     const [openDetailDialog, setOpenDetailDialog] = React.useState(false);
 
-    const handleDeleteConfirm = () => {
+    const handleDeleteConfirm = async (id) => {
+        try {
+            const res = await api.delete(`${pets_api?.pets}/${id}`);
+            onPetSubmitSuccess?.();
+        }catch(err){
+            console.error("Error getting Delete Pet::", err)
+        }
         setOpenDeleteDialog(false);
     };
 
     const handleAdaptConfirm = async (id) => {
         try {
             const res = await api.patch(`${pets_api?.pets}/${id}/adopt`);
-            console.log("res::", res);
             onPetSubmitSuccess?.();
         }catch(err){
             console.error("Error getting on Adopting::", err);
@@ -150,7 +155,7 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     Are you sure you want to delete <strong>{name}</strong>?
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+                    <Button onClick={() => handleDeleteConfirm(id)} color="error" variant="contained">
                         Delete
                     </Button>
                 </DialogActions>
