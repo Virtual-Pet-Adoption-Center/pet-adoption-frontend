@@ -9,13 +9,11 @@ import {
     InputLabel,
     FormControl, Alert
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
 
 const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubmitSuccess }) => {
-    const navigate = useNavigate();
-    // console.log("petData::", petData)
+    console.log("petData::", petData)
 
     const [formValues, setFormValues] = useState({
         name: petData.name || '',
@@ -33,29 +31,34 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            if (mode === 'create') {
-                try {
-                    const res = await api.post(pets_api?.addNewPet, formValues);
-                    if (res?.status === 201) {
-                        console.log('Pet added successfully::', res);
-                        console.log('form Values::', formValues);
-                        onPetSubmitSuccess?.();
-                        <Alert severity="success">Pet added successfully</Alert>
-                    } else {
-                        console.log("Error:: Cannot Create::")
-                    }
-                } catch (err) {
-                    console.error("Error getting on Add New Pet::", err);
+        if (mode === 'create') {
+            try {
+                const res = await api.post(pets_api?.addNewPet, formValues);
+                if (res?.status === 201) {
+                    console.log('Pet added successfully::', res);
+                    console.log('form Values::', formValues);
+                    onPetSubmitSuccess?.();
+                } else {
+                    console.log("Error:: Cannot Create::")
                 }
-            } else {
-                console.log('Pet edited:', formValues);
+            } catch (err) {
+                console.error("Error getting on Add New Pet::", err);
             }
-            // navigate('/');
-            handleCloseModal();
-        } catch (error) {
-            console.error('Error submitting pet data:', error);
+        } else {
+            try {
+                const res = await api.put(`${pets_api.updatePetData}/${petData._id}`, formValues);
+                if (res?.status === 200) {
+                    console.log("Pet data updated::", formValues, "::", res, "id::", petData.id);
+                    onPetSubmitSuccess?.();
+                } else {
+                    console.log("Error:: Cannot Update::")
+                }
+
+            } catch (err) {
+                console.error("Error getting on Update Pet ID::", petData.id)
+            }
         }
+        handleCloseModal();
     };
 
     return (

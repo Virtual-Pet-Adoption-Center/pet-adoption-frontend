@@ -5,11 +5,30 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {
     Card, CardHeader, CardMedia, CardContent, Avatar,
     IconButton, Typography, Button, Dialog,
-    DialogContent, DialogActions, Box
+    DialogContent, DialogActions, Box, DialogTitle
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit }) => {
+export const CloseIconHandling = ({ onClose }) => {
+    return (
+        <Box>
+            <Box
+                onClick={onClose}
+                sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    cursor: 'pointer',
+                    zIndex: 1
+                }}
+            >
+                <CloseIcon sx={{ color: 'white', backgroundColor: "#616161" }} />
+            </Box>
+        </Box>
+    )
+}
+
+const PetCard = ({ _id, name, species, age, personality, mood, adapted, adapted_date, onEdit }) => {
     const moodColors = {
         Happy: { button: 'green', border: '#4caf50' },
         Excited: { button: 'orange', border: '#ff9800' },
@@ -18,19 +37,32 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
 
     const moodColor = moodColors[mood] || { button: 'grey', border: '#e91e63' };
 
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const [openAdapt, setOpenAdapt] = React.useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const [openAdaptDialog, setOpenAdaptDialog] = React.useState(false);
+    const [openDetailDialog, setOpenDetailDialog] = React.useState(false);
 
     const handleDeleteConfirm = () => {
-        setOpenDialog(false);
+        setOpenDeleteDialog(false);
     };
+
     const handleAdaptConfirm = () => {
-        setOpenAdapt(false);
+        setOpenAdaptDialog(false);
     };
 
     return (
         <>
-            <Card sx={{ maxWidth: 300, margin: '10px', flex: '1 1 300px', border: `2px solid ${moodColor?.border}`, borderRadius: '12px' }}>
+            <Card
+                onClick={() => setOpenDetailDialog(true)}
+                sx={{
+                    maxWidth: 300,
+                    margin: '10px',
+                    flex: '1 1 300px',
+                    border: `2px solid ${moodColor?.border}`,
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    position: 'relative'
+                }}
+            >
                 <CardHeader
                     avatar={
                         <Avatar sx={{ bgcolor: '#616161' }} aria-label="pet">
@@ -38,14 +70,14 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                         </Avatar>
                     }
                     action={
-                        <>
+                        <Box onClick={e => e.stopPropagation()}>
                             <IconButton aria-label="edit" size="small" onClick={onEdit}>
                                 <EditIcon />
                             </IconButton>
-                            <IconButton aria-label="delete" size="small" sx={{ color: 'red' }} onClick={() => setOpenDialog(true)}>
+                            <IconButton aria-label="delete" size="small" sx={{ color: 'red' }} onClick={() => setOpenDeleteDialog(true)}>
                                 <DeleteIcon />
                             </IconButton>
-                        </>
+                        </Box>
                     }
                     title={name}
                     subheader={species}
@@ -57,17 +89,28 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     alt={`${name} the ${species}`}
                 />
                 <CardContent>
-                    <div className='container3' style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography variant="body2" color="text.secondary">
                             {age} {age === 1 ? 'year' : 'years'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             {personality}
                         </Typography>
-                    </div>
-                    <Button size='small' disabled={adapted === true}
-                        onClick={() => setOpenAdapt(true)}
-                        sx={{ backgroundColor: adapted === false ? '#616161' : '#bdbdbd', color: 'white', width: '100%', borderRadius: 2 }}>
+                    </Box>
+                    <Button
+                        size='small'
+                        disabled={adapted === true}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenAdaptDialog(true);
+                        }}
+                        sx={{
+                            backgroundColor: adapted === false ? '#616161' : '#bdbdbd',
+                            color: 'white',
+                            width: '100%',
+                            borderRadius: 2
+                        }}
+                    >
                         {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date}`}
                     </Button>
                 </CardContent>
@@ -76,21 +119,24 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                 </Button>
             </Card>
 
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <Box>
-                    <Box
-                        onClick={() => setOpenDialog(false)}
-                        sx={{
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            cursor: 'pointer',
-                            zIndex: 1
-                        }}
-                    >
-                        <CloseIcon sx={{ color: 'white', backgroundColor: "#616161" }} />
-                    </Box>
-                </Box>
+            {/* Pet Detail Dialog */}
+            <Dialog open={openDetailDialog} onClose={() => setOpenDetailDialog(false)} maxWidth="sm" fullWidth>
+                <CloseIconHandling onClose={() => setOpenDetailDialog(false)} />
+                <DialogTitle>
+                    {name}
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography variant="body1"><strong>Species:</strong> {species}</Typography>
+                    <Typography variant="body1"><strong>Age:</strong> {age} {age === 1 ? 'year' : 'years'}</Typography>
+                    <Typography variant="body1"><strong>Personality:</strong> {personality}</Typography>
+                    <Typography variant="body1"><strong>Mood:</strong> {mood}</Typography>
+                    <Typography variant="body1"><strong>Status:</strong> {adapted ? `Adapted on ${adapted_date}` : 'Available for adoption'}</Typography>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete Confirmation */}
+            <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+                <CloseIconHandling onClose={() => setOpenDeleteDialog(false)} />
                 <DialogContent>
                     Are you sure you want to delete <strong>{name}</strong>?
                 </DialogContent>
@@ -101,23 +147,11 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={openAdapt} onClose={() => setOpenAdapt(false)}>
-                <Box>
-                    <Box
-                        onClick={() => setOpenAdapt(false)}
-                        sx={{
-                            position: 'absolute',
-                            top: 0,
-                            right: 0,
-                            cursor: 'pointer',
-                            zIndex: 1
-                        }}
-                    >
-                        <CloseIcon sx={{ color: 'white', backgroundColor: "#616161" }} />
-                    </Box>
-                </Box>
+            {/* Adoption Confirmation */}
+            <Dialog open={openAdaptDialog} onClose={() => setOpenAdaptDialog(false)}>
+                <CloseIconHandling onClose={() => setOpenAdaptDialog(false)} />
                 <DialogContent>
-                    Are you sure to ADOPT <strong>{name}</strong>?
+                    Are you sure you want to ADOPT <strong>{name}</strong>?
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleAdaptConfirm} color="success" variant="contained">

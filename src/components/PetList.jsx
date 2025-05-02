@@ -15,6 +15,7 @@ const PetList = () => {
     const [editPet, setEditPet] = useState(null);
 
     const handleEditClick = (pet) => {
+        getPetData(pet?._id)
         setEditPet(pet);
         setIsModalOpen(true);
     };
@@ -25,15 +26,24 @@ const PetList = () => {
         try {
             const response = await api.get(pets_api.getAllPets);
             setPets(response?.data);
-            // console.log("pets data::", response?.data )
-        }catch(err){
+        } catch (err) {
             console.err("Error fetching on Get All Pets::", err)
         }
     }
 
-   useEffect(() => {
-       getAllPetsData()
-   }, [pets]);
+    const getPetData = async (id) => {
+        try {
+            const res = await api.get(`${pets_api.getPetData}/${id}`);
+            setEditPet(res?.data);
+        } catch (err) {
+            console.error("Error fetching on Pet::", err);
+        }
+    }
+
+    useEffect(() => {
+        getAllPetsData()
+    }, []);
+
 
     return (
         <div>
