@@ -8,10 +8,10 @@ import AddPetForm from './AddPetForm.jsx';
 import api, { pets_api } from '../services/api';
 import { useEffect } from 'react';
 
-
-const PetList = () => {
+const PetList = ({ mood }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editPet, setEditPet] = useState(null);
+    const [pets, setPets] = useState([]);
 
     const handleEditClick = (pet) => {
         getPetData(pet?._id)
@@ -19,36 +19,47 @@ const PetList = () => {
         setIsModalOpen(true);
     };
 
-    const [pets, setPets] = useState([]);
-
     const getAllPetsData = async () => {
         try {
-            const response = await api.get(pets_api.pets);
+            const response = await api.get(pets_api.getAllPets);
             setPets(response?.data);
-            console.log("pets data::", response?.data)
         } catch (err) {
             console.error("Error fetching on Get All Pets::", err)
         }
     }
-
     const getPetData = async (id) => {
         try {
-            const res = await api.get(`${pets_api.pets}/${id}`);
+            const res = await api.get(`${pets_api.getPetData}/${id}`);
             setEditPet(res?.data);
-            console.log("pets data::", res?.data)
         } catch (err) {
             console.error("Error fetching on Pet::", err);
         }
     }
+    const filterPetsByMood = async () => {
+        try {
+            if (mood === 'all') {
+                await getAllPetsData();
+                return;
+            } else {
+                let url = pets_api.filterPetsMood;
+                let params = {};
+                params.mood = mood
+                const response = await api.get(url, { params });
+                setPets(response?.data);
+            }
 
+        } catch (err) {
+            console.error("Filtering error:", err);
+        }
+    };
     useEffect(() => {
-        getAllPetsData()
-    }, []);
+        filterPetsByMood();
+    }, [mood])
 
     return (
         <div>
             <div className="pet-card-container">
-                {pets.map((pet, index) => (
+                {pets.map((pet) => (
                     <PetCard
                         key={pet?._id}
                         id={pet?._id}

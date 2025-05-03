@@ -10,6 +10,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
 import { format } from 'date-fns';
+import { moodColors } from '../utils/utils'; 
 
 export const CloseIconHandling = ({ onClose }) => {
     return (
@@ -31,23 +32,16 @@ export const CloseIconHandling = ({ onClose }) => {
 }
 
 const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit, onPetSubmitSuccess }) => {
-    const moodColors = {
-        Happy: { button: 'green', border: '#4caf50' },
-        Excited: { button: 'orange', border: '#ff9800' },
-        Sad: { button: 'red', border: '#f44336' }
-    };
-
     const moodColor = moodColors[mood] || { button: 'grey', border: '#e91e63' };
-
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [openAdaptDialog, setOpenAdaptDialog] = React.useState(false);
     const [openDetailDialog, setOpenDetailDialog] = React.useState(false);
 
     const handleDeleteConfirm = async (id) => {
         try {
-            const res = await api.delete(`${pets_api?.pets}/${id}`);
+            const res = await api.delete(`${pets_api?.deletePet}/${id}`);
             onPetSubmitSuccess?.();
-        }catch(err){
+        } catch (err) {
             console.error("Error getting Delete Pet::", err)
         }
         setOpenDeleteDialog(false);
@@ -55,9 +49,9 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
 
     const handleAdaptConfirm = async (id) => {
         try {
-            const res = await api.patch(`${pets_api?.pets}/${id}/adopt`);
+            const res = await api.patch(`${pets_api?.adoptPet}/${id}/adopt`);
             onPetSubmitSuccess?.();
-        }catch(err){
+        } catch (err) {
             console.error("Error getting on Adopting::", err);
         }
         setOpenAdaptDialog(false);
@@ -125,7 +119,7 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                             borderRadius: 2
                         }}
                     >
-                        {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date ? format(new Date(adapted_date), 'yyyy-MM-dd'): ''}`}
+                        {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date ? format(new Date(adapted_date), 'yyyy-MM-dd') : ''}`}
                     </Button>
                 </CardContent>
                 <Button size='small' sx={{ backgroundColor: moodColor?.button, color: 'white', width: '100%', borderRadius: 0 }}>
@@ -176,5 +170,4 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
         </>
     );
 };
-
 export default PetCard;

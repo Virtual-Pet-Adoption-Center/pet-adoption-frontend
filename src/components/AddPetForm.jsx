@@ -7,14 +7,12 @@ import {
     Select,
     MenuItem,
     InputLabel,
-    FormControl, Alert
+    FormControl
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
 
 const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubmitSuccess }) => {
-    console.log("petData::", petData)
-
     const [formValues, setFormValues] = useState({
         name: petData.name || '',
         age: petData.age || '',
@@ -33,10 +31,8 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
         e.preventDefault();
         if (mode === 'create') {
             try {
-                const res = await api.post(pets_api?.pets, formValues);
+                const res = await api.post(pets_api?.addNewPet, formValues);
                 if (res?.status === 201) {
-                    console.log('Pet added successfully::', res);
-                    console.log('form Values::', formValues);
                     onPetSubmitSuccess?.();
                 } else {
                     console.log("Error:: Cannot Create::")
@@ -46,14 +42,12 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
             }
         } else {
             try {
-                const res = await api.put(`${pets_api.pets}/${petData._id}`, formValues);
+                const res = await api.put(`${pets_api.updatePetData}/${petData._id}`, formValues);
                 if (res?.status === 200) {
-                    console.log("Pet data updated::", formValues, "::", res, "id::", petData.id);
                     onPetSubmitSuccess?.();
                 } else {
                     console.log("Error:: Cannot Update::")
                 }
-
             } catch (err) {
                 console.error("Error getting on Update Pet ID::", petData.id)
             }

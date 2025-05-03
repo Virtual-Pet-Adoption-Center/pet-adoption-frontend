@@ -8,6 +8,7 @@ import { Modal, Box, MenuItem, Button, FormControl, Select } from '@mui/material
 
 const Home = () => {
     const [openModal, setOpenModal] = useState(false);
+    const [mood, setMood] = React.useState('all');
 
     const handleOpenModal = () => {
         setOpenModal(true);
@@ -17,10 +18,8 @@ const Home = () => {
         setOpenModal(false);
     };
 
-    const [age, setAge] = React.useState('all');
-
-    const handleChange = (event) => {
-        setAge(event.target.value);
+    const handleChangeMood = (event) => {
+        setMood(event.target.value);
     };
 
     return (
@@ -66,26 +65,25 @@ const Home = () => {
                         md: '25%'
                     },
                     border: '2px solid #616161',
-                    borderRadius:'5px'
-                   
+                    borderRadius: '5px'
+
                 }}>
                     <Select
-                        value={age}
-                        onChange={handleChange}
+                        value={mood}
+                        onChange={handleChangeMood}
                         autoWidth
                         sx={{ height: '40px', backgroundColor: 'white' }}
                     >
                         <MenuItem value="all">All</MenuItem>
-                        <MenuItem value={1}>1 year</MenuItem>
-                        <MenuItem value={2}>2 years</MenuItem>
-                        <MenuItem value={3}>3 years</MenuItem>
-                        <MenuItem value={4}>4 years</MenuItem>
+                        <MenuItem value="Happy">Happy</MenuItem>
+                        <MenuItem value="Exicted">Exicted</MenuItem>
+                        <MenuItem value="Sad">Sad</MenuItem>
                     </Select>
                 </FormControl>
             </div>
 
             <div className="container4">
-                <PetList handleOpenModal={handleOpenModal} age />
+                <PetList handleOpenModal={handleOpenModal} mood={mood} />
             </div>
 
             <Modal open={openModal} onClose={handleCloseModal}>
@@ -110,5 +108,4 @@ const Home = () => {
         </div>
     );
 };
-
 export default Home;
