@@ -12,6 +12,9 @@ import { format } from 'date-fns';
 import { moodColors } from '../utils/utils';
 import CatImage from '../assests/cat.jpg';
 import DogImage from '../assests/dog.jpg';
+import DownloadIcon from '@mui/icons-material/Download';
+import jsPDF from 'jspdf';
+import Logo from '../assests/new_logo.png';
 
 export const CloseIconHandling = ({ onClose }) => {
     return (
@@ -41,7 +44,11 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
     const handleDeleteConfirm = async (id) => {
         try {
             const res = await api.delete(`${pets_api?.deletePet}/${id}`);
-            onPetSubmitSuccess?.();
+            if (res?.status === 200) {
+                onPetSubmitSuccess?.();
+            } else {
+                console.error("::Can not Delete pet::")
+            }
         } catch (err) {
             console.error("Error getting Delete Pet::", err)
         }
@@ -51,11 +58,85 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
     const handleAdaptConfirm = async (id) => {
         try {
             const res = await api.patch(`${pets_api?.adoptPet}/${id}/adopt`);
-            onPetSubmitSuccess?.();
+            if (res?.status === 200) {
+                onPetSubmitSuccess?.();
+            } else {
+                console.error("::Can not Adopt pet::")
+            }
         } catch (err) {
             console.error("Error getting on Adopting::", err);
         }
         setOpenAdaptDialog(false);
+    };
+
+    const handleDownloadCertificate = (e) => {
+        e.stopPropagation();
+        const pdf = new jsPDF();
+
+        const img = new Image();
+        img.src = Logo;
+
+        img.onload = function () {
+            pdf.addImage(img, 'PNG', 80, 10, 50, 50);
+
+            pdf.setFontSize(20);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Certificate of Adoption', 105, 65, null, null, 'center');
+
+            pdf.setFontSize(12);
+            let y = 75;
+
+            pdf.setFont('helvetica', 'normal');
+            pdf.text('This certifies that ', 20, y);
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(`${name}`, pdf.getTextWidth('This certifies that ') + 20, y);
+
+            const offset1 = pdf.getTextWidth(`This certifies that ${name} `);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text('the ', 20 + offset1, y);
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text(`${species}`, 20 + offset1 + pdf.getTextWidth('the '), y);
+
+            const offset2 = offset1 + pdf.getTextWidth('the ') + pdf.getTextWidth(`${species} `);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(' has been adopted.', 20 + offset2, y);
+            y += 10;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Age:', 20, y);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`${age} ${age === 1 ? 'year' : 'years'}`, 30, y);
+            y += 10;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Personality:', 20, y);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`${personality}`, 45, y);
+            y += 10;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Mood:', 20, y);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`${mood}`, 35, y);
+            y += 10;
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Date of Adoption:', 20, y);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`${adapted_date ? format(new Date(adapted_date), 'yyyy-MM-dd') : 'N/A'}`, 60, y);
+            y += 20;
+
+            pdf.setFont('helvetica', 'normal');
+            pdf.text('Thank you for giving a loving home!', 20, y);
+            y += 10;
+
+            pdf.setFont('helvetica', 'italic');
+            pdf.text(`Certificate issued on: ${format(new Date(), 'yyyy-MM-dd')}`, 20, y);
+
+            pdf.save(`Adoption_Certificate_${name}.pdf`);
+        };
     };
 
     return (
@@ -80,6 +161,10 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     }
                     action={
                         <Box onClick={e => e.stopPropagation()}>
+                            {adapted === true ? (
+                                <IconButton aria-label="download" size="small" onClick={handleDownloadCertificate}>
+                                    <DownloadIcon />
+                                </IconButton>) : ""}
                             <IconButton aria-label="edit" size="small" onClick={onEdit}>
                                 <EditIcon />
                             </IconButton>
@@ -94,7 +179,7 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                 <CardMedia
                     component="img"
                     height="190"
-                    image={species === "Dog" ? DogImage : CatImage }
+                    image={species === "Dog" ? DogImage : CatImage}
                     alt={`${name} the ${species}`}
                 />
                 <CardContent>

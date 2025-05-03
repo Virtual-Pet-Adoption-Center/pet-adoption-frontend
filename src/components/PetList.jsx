@@ -54,6 +54,7 @@ const PetList = ({ mood }) => {
     };
     useEffect(() => {
         filterPetsByMood();
+        // eslint-disable-next-line
     }, [mood])
 
     return (
