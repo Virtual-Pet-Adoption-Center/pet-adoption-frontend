@@ -31,7 +31,7 @@ const Home = () => {
 
             <div className="begin-container">
                 <div className="header-overlay" />
-                <img src={PetLogo} width="150" height="150" alt="logo" />
+                <img src={PetLogo} width="150" height="150" alt="logo" className="logo-animation" />
 
                 <Button
                     onClick={handleOpenModal}
@@ -76,7 +76,7 @@ const Home = () => {
                     >
                         <MenuItem value="all">All</MenuItem>
                         <MenuItem value="Happy">Happy</MenuItem>
-                        <MenuItem value="Exicted">Exicted</MenuItem>
+                        <MenuItem value="Excited">Excited</MenuItem>
                         <MenuItem value="Sad">Sad</MenuItem>
                     </Select>
                 </FormControl>

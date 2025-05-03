@@ -176,12 +176,12 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     title={name}
                     subheader={species}
                 />
-                <CardMedia
+                {/* <CardMedia
                     component="img"
                     height="190"
                     image={species === "Dog" ? DogImage : CatImage}
                     alt={`${name} the ${species}`}
-                />
+                /> */}
                 <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography variant="body2" color="text.secondary">
