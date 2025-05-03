@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PetLogo from '../assests/pet_logo.jpg';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
@@ -10,7 +9,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
 import { format } from 'date-fns';
-import { moodColors } from '../utils/utils'; 
+import { moodColors } from '../utils/utils';
+import CatImage from '../assests/cat.jpg';
+import DogImage from '../assests/dog.jpg';
 
 export const CloseIconHandling = ({ onClose }) => {
     return (
@@ -92,8 +93,8 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                 />
                 <CardMedia
                     component="img"
-                    height="194"
-                    image={PetLogo}
+                    height="190"
+                    image={species === "Dog" ? DogImage : CatImage }
                     alt={`${name} the ${species}`}
                 />
                 <CardContent>
