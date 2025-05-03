@@ -7,6 +7,7 @@ import { Modal } from '@mui/material';
 import AddPetForm from './AddPetForm.jsx';
 import api, { pets_api } from '../services/api';
 import { useEffect } from 'react';
+import EmptyData from './EmptyData';
 
 const PetList = ({ mood }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,21 +61,24 @@ const PetList = ({ mood }) => {
     return (
         <div>
             <div className="pet-card-container">
-                {pets.map((pet) => (
-                    <PetCard
-                        key={pet?._id}
-                        id={pet?._id}
-                        name={pet?.name}
-                        age={pet?.age}
-                        species={pet?.species}
-                        mood={pet?.mood}
-                        personality={pet?.personality}
-                        adapted={pet?.adopted}
-                        adapted_date={pet?.adoption_date}
-                        onEdit={() => handleEditClick(pet)}
-                        onPetSubmitSuccess={getAllPetsData}
-                    />
-                ))}
+                {pets?.length === 0 ? (
+                    <EmptyData />
+                ) : (
+                    pets.map((pet) => (
+                        <PetCard
+                            key={pet?._id}
+                            id={pet?._id}
+                            name={pet?.name}
+                            age={pet?.age}
+                            species={pet?.species}
+                            mood={pet?.mood}
+                            personality={pet?.personality}
+                            adapted={pet?.adopted}
+                            adapted_date={pet?.adoption_date}
+                            onEdit={() => handleEditClick(pet)}
+                            onPetSubmitSuccess={getAllPetsData}
+                        />
+                    )))}
             </div>
 
             {isModalOpen && (

@@ -2,16 +2,15 @@ import * as React from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-    Card, CardHeader, CardMedia, CardContent, Avatar,
+    Card, CardHeader, CardContent, Avatar,
     IconButton, Typography, Button, Dialog,
-    DialogContent, DialogActions, Box, DialogTitle
+    DialogContent, DialogActions, Box, DialogTitle,
+    Snackbar, Alert
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
 import { format } from 'date-fns';
 import { moodColors } from '../utils/utils';
-import CatImage from '../assests/cat.jpg';
-import DogImage from '../assests/dog.jpg';
 import DownloadIcon from '@mui/icons-material/Download';
 import jsPDF from 'jspdf';
 import Logo from '../assests/new_logo.png';
@@ -32,8 +31,8 @@ export const CloseIconHandling = ({ onClose }) => {
                 <CloseIcon sx={{ color: 'white', backgroundColor: "#616161" }} />
             </Box>
         </Box>
-    )
-}
+    );
+};
 
 const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit, onPetSubmitSuccess }) => {
     const moodColor = moodColors[mood] || { button: 'grey', border: '#e91e63' };
@@ -41,16 +40,31 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
     const [openAdaptDialog, setOpenAdaptDialog] = React.useState(false);
     const [openDetailDialog, setOpenDetailDialog] = React.useState(false);
 
+    const [snackbar, setSnackbar] = React.useState({
+        open: false,
+        message: '',
+        severity: 'success'
+    });
+
+    const showSnackbar = (message, severity = 'success') => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
+
     const handleDeleteConfirm = async (id) => {
         try {
             const res = await api.delete(`${pets_api?.deletePet}/${id}`);
             if (res?.status === 200) {
                 onPetSubmitSuccess?.();
+                showSnackbar("Pet deleted successfully!");
             } else {
-                console.error("::Can not Delete pet::")
+                console.error("::Can not Delete pet::");
             }
         } catch (err) {
-            console.error("Error getting Delete Pet::", err)
+            console.error("Error getting Delete Pet::", err);
         }
         setOpenDeleteDialog(false);
     };
@@ -60,8 +74,9 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
             const res = await api.patch(`${pets_api?.adoptPet}/${id}/adopt`);
             if (res?.status === 200) {
                 onPetSubmitSuccess?.();
+                showSnackbar("Pet adopted successfully!");
             } else {
-                console.error("::Can not Adopt pet::")
+                console.error("::Can not Adopt pet::");
             }
         } catch (err) {
             console.error("Error getting on Adopting::", err);
@@ -136,6 +151,8 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
             pdf.text(`Certificate issued on: ${format(new Date(), 'yyyy-MM-dd')}`, 20, y);
 
             pdf.save(`Adoption_Certificate_${name}.pdf`);
+
+            showSnackbar("Certificate downloaded successfully!");
         };
     };
 
@@ -161,10 +178,11 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     }
                     action={
                         <Box onClick={e => e.stopPropagation()}>
-                            {adapted === true ? (
+                            {adapted === true && (
                                 <IconButton aria-label="download" size="small" onClick={handleDownloadCertificate}>
                                     <DownloadIcon />
-                                </IconButton>) : ""}
+                                </IconButton>
+                            )}
                             <IconButton aria-label="edit" size="small" onClick={onEdit}>
                                 <EditIcon />
                             </IconButton>
@@ -176,12 +194,6 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     title={name}
                     subheader={species}
                 />
-                {/* <CardMedia
-                    component="img"
-                    height="190"
-                    image={species === "Dog" ? DogImage : CatImage}
-                    alt={`${name} the ${species}`}
-                /> */}
                 <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                         <Typography variant="body2" color="text.secondary">
@@ -216,9 +228,7 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
             {/* Pet Detail Dialog */}
             <Dialog open={openDetailDialog} onClose={() => setOpenDetailDialog(false)} maxWidth="sm" fullWidth>
                 <CloseIconHandling onClose={() => setOpenDetailDialog(false)} />
-                <DialogTitle>
-                    {name}
-                </DialogTitle>
+                <DialogTitle>{name}</DialogTitle>
                 <DialogContent dividers>
                     <Typography variant="body1"><strong>Species:</strong> {species}</Typography>
                     <Typography variant="body1"><strong>Age:</strong> {age} {age === 1 ? 'year' : 'years'}</Typography>
@@ -253,7 +263,19 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </>
     );
 };
+
 export default PetCard;
