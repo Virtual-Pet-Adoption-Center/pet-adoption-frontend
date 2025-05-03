@@ -217,7 +217,7 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                             borderRadius: 2
                         }}
                     >
-                        {adapted === false ? "Adopt Me" : `Adapted   ${adapted_date ? format(new Date(adapted_date), 'yyyy-MM-dd') : ''}`}
+                        {adapted === false ? "Adopt Me" : `Adopted   ${adapted_date ? format(new Date(adapted_date), 'yyyy-MM-dd') : ''}`}
                     </Button>
                 </CardContent>
                 <Button size='small' sx={{ backgroundColor: moodColor?.button, color: 'white', width: '100%', borderRadius: 0 }}>
