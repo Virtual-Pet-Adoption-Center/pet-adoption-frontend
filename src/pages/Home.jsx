@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Home.css';
 import PetLogo from '../assests/new_logo.png';
 import NewCoverImage from '../assests/new_cover.png';
@@ -8,7 +8,15 @@ import { Modal, Box, MenuItem, Button, FormControl, Select } from '@mui/material
 
 const Home = () => {
     const [openModal, setOpenModal] = useState(false);
-    const [mood, setMood] = React.useState('all');
+    const [mood, setMood] = useState('all');
+    const [showSplash, setShowSplash] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowSplash(false);
+        }, 2000); // splash screen duration
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleOpenModal = () => {
         setOpenModal(true);
@@ -21,6 +29,14 @@ const Home = () => {
     const handleChangeMood = (event) => {
         setMood(event.target.value);
     };
+
+    if (showSplash) {
+        return (
+            <div className="splash-screen">
+                <img src={PetLogo} alt="logo" className="splash-logo" />
+            </div>
+        );
+    }
 
     return (
         <div className="container1">
@@ -43,31 +59,32 @@ const Home = () => {
                         width: {
                             xs: '100%',
                             sm: 'auto',
-                            md: '25%'
+                            md: '25%',
                         },
                         margin: '0 auto',
                         backgroundColor: 'white',
                         color: '#616161',
                         border: '2px solid #616161',
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
                     }}
                 >
                     Add New Pet
                 </Button>
 
-                <FormControl sx={{
-                    minWidth: 120,
-                    height: '40px',
-                    flexShrink: 0,
-                    width: {
-                        xs: '100%',
-                        sm: 'auto',
-                        md: '25%'
-                    },
-                    border: '2px solid #616161',
-                    borderRadius: '5px'
-
-                }}>
+                <FormControl
+                    sx={{
+                        minWidth: 120,
+                        height: '40px',
+                        flexShrink: 0,
+                        width: {
+                            xs: '100%',
+                            sm: 'auto',
+                            md: '25%',
+                        },
+                        border: '2px solid #616161',
+                        borderRadius: '5px',
+                    }}
+                >
                     <Select
                         value={mood}
                         onChange={handleChangeMood}
@@ -108,4 +125,5 @@ const Home = () => {
         </div>
     );
 };
+
 export default Home;
