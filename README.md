@@ -46,7 +46,7 @@ The frontend will be available at http://localhost:3000.
     npm install jspdf html2canvas
 
 
-## 📌 4. **Key Features**
+## 📌 **Key Features**
 
 - Browse and adopt pets, update, delete etc. 
 - Interactive pet profiles
