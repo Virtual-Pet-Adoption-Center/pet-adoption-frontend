@@ -11,7 +11,7 @@ Follow these steps to set up and run the project locally.
 - Node.js (v14 or higher)
 - npm or yarn
 
-### Installation
+### 📦 Installation
 
 ```bash
 # Clone the repository
