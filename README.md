@@ -30,15 +30,6 @@ npm start
 
 The frontend will be available at http://localhost:3000.
 
-# Used libraries : 
-1. Material UI for styling & icons : 
-    npm install @mui/material @emotion/react @emotion/styled
-    npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
-2. Routes : npm install react-router-dom
-3. To pass and received requests and responses : npm install axios
-4. Formatting dates : npm i date-fns
-5. PDF downloading : npm install jspdf html2canvas
-
 ## 🛠️ Tech Stack
 
 - **React** – Frontend Framework
@@ -55,7 +46,7 @@ The frontend will be available at http://localhost:3000.
     npm install jspdf html2canvas
 
 
-#### 📌 4. **Key Features**
+## 📌 4. **Key Features**
 
 - Browse and adopt pets, update, delete etc. 
 - Interactive pet profiles
