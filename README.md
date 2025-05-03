@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# 🐾 Virtual Pet Adoption Center - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend application for the **Virtual Pet Adoption Center**, a platform that allows users to browse, adopt, and interact with virtual pets in a user-friendly environment. Built using React js. 
 
-## Available Scripts
+## 🚀 Getting Started
 
-In the project directory, you can run:
+Follow these steps to set up and run the project locally.
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Node.js (v14 or higher)
+- npm or yarn
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Installation
 
-### `npm test`
+```bash
+# Clone the repository
+git clone https://github.com/Virtual-Pet-Adoption-Center/pet-adoption-frontend.git
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Navigate into the project directory
+cd pet-adoption-frontend
 
-### `npm run build`
+# Install dependencies
+npm install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Start the development server
+npm start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The frontend will be available at http://localhost:3000.
 
-### `npm run eject`
+# Used libraries : 
+1. Material UI for styling & icons : 
+    npm install @mui/material @emotion/react @emotion/styled
+    npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+2. Routes : npm install react-router-dom
+3. To pass and received requests and responses : npm install axios
+4. Formatting dates : npm i date-fns
+5. PDF downloading : npm install jspdf html2canvas
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🛠️ Tech Stack
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **React** – Frontend Framework
+- **Material UI** – UI Components and Icons
+    npm install @mui/material @emotion/react @emotion/styled
+    npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+- **React Router DOM** – Client-side Routing
+    npm install react-router-dom
+- **Axios** – HTTP Requests
+    npm install axios
+- **date-fns** – Date formatting
+    npm i date-fns
+- **jsPDF + html2canvas** – Export components as PDF
+    npm install jspdf html2canvas
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+#### 📌 4. **Key Features**
 
-## Learn More
+- Browse and adopt pets, update, delete etc. 
+- Interactive pet profiles
+- Responsive UI with Material UI
+- Dynamic routing with React Router
+- REST API integration using Axios
+- Downloadable pet adoption certificates (PDF)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📬 Contact
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For questions or collaboration, feel free to reach out:
+- [Hashini Thilinika](https://github.com/hashii99)
+- Email: hashinithilinika.av@gmail.com
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
