@@ -183,12 +183,16 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                                     <DownloadIcon />
                                 </IconButton>
                             )}
-                            <IconButton aria-label="edit" size="small" onClick={onEdit}>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton aria-label="delete" size="small" sx={{ color: 'red' }} onClick={() => setOpenDeleteDialog(true)}>
-                                <DeleteIcon />
-                            </IconButton>
+                            {adapted === false && (
+                                <>
+                                    <IconButton aria-label="edit" size="small" onClick={onEdit}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="delete" size="small" sx={{ color: 'red' }} onClick={() => setOpenDeleteDialog(true)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </>
+                            )}
                         </Box>
                     }
                     title={name}
