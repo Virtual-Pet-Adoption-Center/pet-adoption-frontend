@@ -77,6 +77,7 @@ const PetList = ({ mood }) => {
                             adapted_date={pet?.adoption_date}
                             onEdit={() => handleEditClick(pet)}
                             onPetSubmitSuccess={getAllPetsData}
+                            image={pet?.image}
                         />
                     )))}
             </div>

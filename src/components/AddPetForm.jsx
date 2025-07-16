@@ -20,8 +20,10 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
         name: petData.name || '',
         age: petData.age || '',
         species: petData.species || '',
-        personality: petData.personality || ''
+        personality: petData.personality || '',
     });
+
+    const [selectedImageFile, setSelectedImageFile] = useState(null);
     const [successMessageOpen, setSuccessMessageOpen] = useState(false);
 
     const handleChange = (e) => {
@@ -33,30 +35,33 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (mode === 'create') {
-            try {
-                const res = await api.post(pets_api?.addNewPet, formValues);
-                if (res?.status === 201) {
-                    setSuccessMessageOpen(true);
-                    onPetSubmitSuccess?.();
-                } else {
-                    console.log("Error:: Cannot Create::")
-                }
-            } catch (err) {
-                console.error("Error getting on Add New Pet::", err);
+
+        const formData = new FormData();
+        formData.append("name", formValues.name);
+        formData.append("age", formValues.age);
+        formData.append("species", formValues.species);
+        formData.append("personality", formValues.personality);
+        if (selectedImageFile) {
+            formData.append("image", selectedImageFile);
+        }
+
+        try {
+            const res = mode === 'create'
+                ? await api.post(pets_api?.addNewPet, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
+                : await api.put(`${pets_api.updatePetData}/${petData._id}`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+
+            if (res?.status === 200 || res?.status === 201) {
+                setSuccessMessageOpen(true);
+                onPetSubmitSuccess?.();
+            } else {
+                console.log("Error:: Cannot Submit::");
             }
-        } else {
-            try {
-                const res = await api.put(`${pets_api.updatePetData}/${petData._id}`, formValues);
-                if (res?.status === 200) {
-                    setSuccessMessageOpen(true);
-                    onPetSubmitSuccess?.();
-                } else {
-                    console.log("Error:: Cannot Update::")
-                }
-            } catch (err) {
-                console.error("Error getting on Update Pet ID::", petData.id)
-            }
+        } catch (err) {
+            console.error("Submission error:", err);
         }
     };
 
@@ -123,7 +128,8 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
                         fullWidth
                         required
                     />
-                    <SelectImage />
+
+                    <SelectImage onImageSelect={setSelectedImageFile} />
 
                     <div className='button-group'>
                         <Button

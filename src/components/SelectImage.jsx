@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const SelectImage = () => {
+const SelectImage = ({ onImageSelect }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [error, setError] = useState('');
@@ -22,11 +22,13 @@ const SelectImage = () => {
                 setError('Only JPG, JPEG, and PNG files are allowed.');
                 setSelectedFile(null);
                 setPreviewUrl(null);
+                onImageSelect(null);
                 return;
             }
 
             setSelectedFile(file);
             setError('');
+            onImageSelect(file);
         }
     };
 
@@ -34,6 +36,7 @@ const SelectImage = () => {
         setSelectedFile(null);
         setPreviewUrl(null);
         setError('');
+        onImageSelect(null);
     };
 
     useEffect(() => {
@@ -41,37 +44,38 @@ const SelectImage = () => {
             const objectUrl = URL.createObjectURL(selectedFile);
             setPreviewUrl(objectUrl);
 
-            return () => URL.revokeObjectURL(objectUrl); 
+            return () => URL.revokeObjectURL(objectUrl);
         }
     }, [selectedFile]);
 
     return (
         <Box sx={{ width: '100%', mt: 2 }}>
-            {!selectedFile && ( <>
-            <input
-                type="file"
-                hidden
-                id="upload-button"
-                onChange={handleFileChange}
-                accept=".jpg,.jpeg,.png"
-            />
-            <label htmlFor="upload-button">
-                <Button
-                    variant="contained"
-                    component="span"
-                    disabled={!!selectedFile}
-                    fullWidth
-                    sx={{
-                        maxWidth: { xs: '100%', sm: '300px' },
-                        mb: 1
-                    }}
-                >
-                    Upload Pet Image
-                </Button>
-            </label>
-            </> )}
+            {!selectedFile && (
+                <>
+                    <input
+                        type="file"
+                        hidden
+                        id="upload-button"
+                        onChange={handleFileChange}
+                        accept=".jpg,.jpeg,.png"
+                    />
+                    <label htmlFor="upload-button">
+                        <Button
+                            variant="contained"
+                            component="span"
+                            fullWidth
+                            sx={{
+                                maxWidth: { xs: '100%', sm: '300px' },
+                                mb: 1
+                            }}
+                        >
+                            Upload Pet Image
+                        </Button>
+                    </label>
+                </>
+            )}
 
-            <div style={{display:'flex', flexDirection:'row'}}>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
                 {previewUrl && (
                     <Box
                         component="img"
@@ -79,7 +83,7 @@ const SelectImage = () => {
                         alt="Preview"
                         sx={{
                             mt: 2,
-                            mr:2,
+                            mr: 2,
                             maxWidth: '15%',
                             height: 'auto',
                             borderRadius: 2,

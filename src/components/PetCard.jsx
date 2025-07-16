@@ -5,7 +5,7 @@ import {
     Card, CardHeader, CardContent, Avatar,
     IconButton, Typography, Button, Dialog,
     DialogContent, DialogActions, Box, DialogTitle,
-    Snackbar, Alert
+    Snackbar, Alert, CardMedia, Stack
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
@@ -14,6 +14,7 @@ import { moodColors } from '../utils/utils';
 import DownloadIcon from '@mui/icons-material/Download';
 import jsPDF from 'jspdf';
 import Logo from '../assests/new_logo.png';
+import NoImage from '../assests/noImage.png';
 
 export const CloseIconHandling = ({ onClose }) => {
     return (
@@ -34,7 +35,7 @@ export const CloseIconHandling = ({ onClose }) => {
     );
 };
 
-const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit, onPetSubmitSuccess }) => {
+const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_date, onEdit, onPetSubmitSuccess, image }) => {
     const moodColor = moodColors[mood] || { button: 'grey', border: '#e91e63' };
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [openAdaptDialog, setOpenAdaptDialog] = React.useState(false);
@@ -172,9 +173,13 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
             >
                 <CardHeader
                     avatar={
-                        <Avatar sx={{ bgcolor: '#616161' }} aria-label="pet">
-                            {name?.[0] || 'P'}
-                        </Avatar>
+                        // image ? (
+                            // <Avatar src={`http://localhost:5000/${image}`} alt={name} />
+                        // ) : (
+                            <Avatar sx={{ bgcolor: '#616161' }} aria-label="pet">
+                                {name?.[0] || 'P'}
+                            </Avatar>
+                        // )
                     }
                     action={
                         <Box onClick={e => e.stopPropagation()}>
@@ -197,6 +202,12 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
                     }
                     title={name}
                     subheader={species}
+                />
+                <CardMedia
+                    component="img"
+                    sx={{ width: 100, display: 'block', margin: '0 auto' }}
+                    image={image ? `http://localhost:5000/${image}` : NoImage}
+                    alt={name}
                 />
                 <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -232,14 +243,21 @@ const PetCard = ({ id, name, species, age, personality, mood, adapted, adapted_d
             {/* Pet Detail Dialog */}
             <Dialog open={openDetailDialog} onClose={() => setOpenDetailDialog(false)} maxWidth="sm" fullWidth>
                 <CloseIconHandling onClose={() => setOpenDetailDialog(false)} />
-                <DialogTitle>{name}</DialogTitle>
-                <DialogContent dividers>
-                    <Typography variant="body1"><strong>Species:</strong> {species}</Typography>
-                    <Typography variant="body1"><strong>Age:</strong> {age} {age === 1 ? 'year' : 'years'}</Typography>
-                    <Typography variant="body1"><strong>Personality:</strong> {personality}</Typography>
-                    <Typography variant="body1"><strong>Mood:</strong> {mood}</Typography>
-                    <Typography variant="body1"><strong>Status:</strong> {adapted ? `Adapted on ${adapted_date}` : 'Available for adoption'}</Typography>
-                </DialogContent>
+                <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <div style={{ backgroundColor: '#eeeeee', width: '60%' }} >
+                        <DialogTitle>{name}</DialogTitle>
+                        <DialogContent dividers sx={{ backgroundColor: '' }}>
+                            <Typography variant="body1"><strong>Species:</strong> {species}</Typography>
+                            <Typography variant="body1"><strong>Age:</strong> {age} {age === 1 ? 'year' : 'years'}</Typography>
+                            <Typography variant="body1"><strong>Personality:</strong> {personality}</Typography>
+                            <Typography variant="body1"><strong>Mood:</strong> {mood}</Typography>
+                            <Typography variant="body1"><strong>Status:</strong> {adapted ? `Adapted on ${adapted_date}` : 'Available for adoption'}</Typography>
+                        </DialogContent>
+                    </div>
+                    <div style={{ width: '40%' }}>
+                        <img src={image ? `http://localhost:5000/${image}` : NoImage} alt={name} style={{ width: '80%' }} />
+                    </div>
+                </Stack>
             </Dialog>
 
             {/* Delete Confirmation */}
