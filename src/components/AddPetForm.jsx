@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import api, { pets_api } from '../services/api';
+import SelectImage from './SelectImage';
 
 const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubmitSuccess }) => {
     const [formValues, setFormValues] = useState({
@@ -122,6 +123,8 @@ const AddPetForm = ({ handleCloseModal, mode = "create", petData = {}, onPetSubm
                         fullWidth
                         required
                     />
+                    <SelectImage />
+
                     <div className='button-group'>
                         <Button
                             color="primary"
