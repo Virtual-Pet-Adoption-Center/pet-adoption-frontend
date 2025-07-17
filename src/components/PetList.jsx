@@ -9,7 +9,7 @@ import api, { pets_api } from '../services/api';
 import { useEffect } from 'react';
 import EmptyData from './EmptyData';
 
-const PetList = ({ mood }) => {
+const PetList = ({ mood, adopt }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editPet, setEditPet] = useState(null);
     const [pets, setPets] = useState([]);
@@ -36,27 +36,60 @@ const PetList = ({ mood }) => {
             console.error("Error fetching on Pet::", err);
         }
     }
-    const filterPetsByMood = async () => {
+    // const filterPetsByMood = async () => {
+    //     try {
+    //         if (mood === 'all') {
+    //             await getAllPetsData();
+    //             return;
+    //         } else {
+    //             let url = pets_api.filterPetsMood;
+    //             let params = {};
+    //             params.mood = mood
+    //             const response = await api.get(url, { params });
+    //             setPets(response?.data);
+    //         }
+
+    //     } catch (err) {
+    //         console.error("Filtering error:", err);
+    //     }
+    // };
+    // useEffect(() => {
+    //     filterPetsByMood();
+    //     // eslint-disable-next-line
+    // }, [mood])
+
+    const filterPets = async () => {
         try {
+            let moodFilteredPets = [];
+
             if (mood === 'all') {
-                await getAllPetsData();
-                return;
+                const res = await api.get(pets_api.getAllPets);
+                moodFilteredPets = res?.data || [];
             } else {
-                let url = pets_api.filterPetsMood;
-                let params = {};
-                params.mood = mood
-                const response = await api.get(url, { params });
-                setPets(response?.data);
+                const res = await api.get(pets_api.filterPetsMood, {
+                    params: { mood },
+                });
+                moodFilteredPets = res?.data || [];
             }
 
+            // Apply adopt filtering on frontend
+            const adoptFilteredPets =
+                adopt === 'all'
+                    ? moodFilteredPets
+                    : moodFilteredPets.filter(pet =>
+                        adopt === false ? !pet?.adopted : pet?.adopted
+                    );
+
+            setPets(adoptFilteredPets);
         } catch (err) {
             console.error("Filtering error:", err);
         }
     };
+
     useEffect(() => {
-        filterPetsByMood();
+        filterPets();
         // eslint-disable-next-line
-    }, [mood])
+    }, [mood, adopt]);
 
     return (
         <div>

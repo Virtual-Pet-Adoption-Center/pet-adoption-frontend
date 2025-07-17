@@ -10,6 +10,7 @@ const Home = () => {
     const [openModal, setOpenModal] = useState(false);
     const [mood, setMood] = useState('all');
     const [showSplash, setShowSplash] = useState(true);
+    const [adopt, setAdopt] = useState(false);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -29,6 +30,10 @@ const Home = () => {
     const handleChangeMood = (event) => {
         setMood(event.target.value);
     };
+
+    const handleChangeAdopt = (event) => {
+        setAdopt(event.target.value);
+    }
 
     if (showSplash) {
         return (
@@ -86,6 +91,32 @@ const Home = () => {
                     }}
                 >
                     <Select
+                        value={adopt}
+                        onChange={handleChangeAdopt}
+                        autoWidth
+                        sx={{ height: '40px', backgroundColor: 'white' }}
+                    >
+                        <MenuItem value="all">All</MenuItem>
+                        <MenuItem value={false}>To be Adopting</MenuItem>
+                        <MenuItem value={true}>Adopted</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <FormControl
+                    sx={{
+                        minWidth: 120,
+                        height: '40px',
+                        flexShrink: 0,
+                        width: {
+                            xs: '100%',
+                            sm: 'auto',
+                            md: '25%',
+                        },
+                        border: '2px solid #616161',
+                        borderRadius: '5px',
+                    }}
+                >
+                    <Select
                         value={mood}
                         onChange={handleChangeMood}
                         autoWidth
@@ -100,7 +131,7 @@ const Home = () => {
             </div>
 
             <div className="container4">
-                <PetList handleOpenModal={handleOpenModal} mood={mood} />
+                <PetList handleOpenModal={handleOpenModal} mood={mood} adopt={adopt} />
             </div>
 
             <Modal open={openModal} onClose={handleCloseModal}>
